@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:internationnalchallenges/Components/my_button.dart';
 import 'package:internationnalchallenges/Components/my_textfield.dart';
 
 class LoginPage extends StatelessWidget {
@@ -7,6 +8,12 @@ class LoginPage extends StatelessWidget {
   //text editing controller
   final usernameController = TextEditingController();
   final passwordController = TextEditingController();
+
+  //Sign user in
+  void signUser() {}
+
+  //send to the register page
+  void registerPage() {}
 
   @override
   Widget build(BuildContext context) {
@@ -53,9 +60,49 @@ class LoginPage extends StatelessWidget {
                 obscureText: true,
               ),
 
-              // enter
+              const SizedBox(height: 35),
 
-              // sign in or forgot password
+              MyButton(
+                onTap: signUser,
+                buttonText: "Sign in",
+              ),
+
+              const SizedBox(height: 40),
+
+              Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 25),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Divider(
+                        thickness: 0.5,
+                        color: Colors.grey[400],
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 10),
+                      child: Text(
+                        'Or register now',
+                        style: TextStyle(color: Colors.grey[700], fontSize: 15),
+                      )
+                    ),
+                    Expanded(
+                      child: Divider(
+                        thickness: 0.5,
+                        color: Colors.grey[400],
+                      ),
+                    ),
+                  ],
+                )
+              ),
+
+              const SizedBox(height: 40),
+
+              MyButton(
+                onTap: registerPage,
+                buttonText: "Register",
+              ),
+
             ],
           ),
         )));
