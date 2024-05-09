@@ -2,18 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:internationnalchallenges/Components/my_button.dart';
 import 'package:internationnalchallenges/Components/my_textfield.dart';
 
-class LoginPage extends StatelessWidget {
-  LoginPage({super.key});
+class RegisterPage extends StatelessWidget {
+  RegisterPage({super.key});
 
   //text editing controller
+  final emailController = TextEditingController();
   final usernameController = TextEditingController();
   final passwordController = TextEditingController();
 
-  //Sign user in
-  void signUser() {}
-
-  //send to the register page
-  void registerPage() {}
+  //register user in
+  void registerUser() {}
 
   @override
   Widget build(BuildContext context) {
@@ -35,11 +33,20 @@ class LoginPage extends StatelessWidget {
 
               // login page
               Text(
-                'Login Page',
+                'Register Page',
                 style: TextStyle(
                   color: Colors.grey[700],
                   fontSize: 20,
                 ),
+              ),
+
+              const SizedBox(height: 25),
+              // email textfield
+
+              MyTextField(
+                controller: emailController,
+                hintText: 'Email',
+                obscureText: false,
               ),
 
               const SizedBox(height: 25),
@@ -63,45 +70,11 @@ class LoginPage extends StatelessWidget {
               const SizedBox(height: 35),
 
               MyButton(
-                onTap: signUser,
+                onTap: registerUser,
                 buttonText: "Sign in",
               ),
 
-              const SizedBox(height: 40),
-
-              Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 25),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: Divider(
-                        thickness: 0.5,
-                        color: Colors.grey[400],
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 10),
-                      child: Text(
-                        'Or register now',
-                        style: TextStyle(color: Colors.grey[700], fontSize: 15),
-                      )
-                    ),
-                    Expanded(
-                      child: Divider(
-                        thickness: 0.5,
-                        color: Colors.grey[400],
-                      ),
-                    ),
-                  ],
-                )
-              ),
-
-              const SizedBox(height: 40),
-
-              MyButton(
-                onTap: registerPage,
-                buttonText: "Register",
-              ),
+        
 
             ],
           ),
