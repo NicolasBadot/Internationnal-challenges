@@ -4,6 +4,7 @@ import 'package:internationnalchallenges/Pages/lock.dart';
 import 'package:internationnalchallenges/Pages/login.dart';
 import 'package:internationnalchallenges/Pages/register.dart';
 
+
 class HomePage extends StatefulWidget {
   HomePage({super.key});
 

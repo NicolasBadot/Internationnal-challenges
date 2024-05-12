@@ -2,6 +2,8 @@ import 'dart:async';
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/percent_indicator.dart';
+import 'package:internationnalchallenges/Pages/AddLockPage.dart';
+import 'package:internationnalchallenges/Pages/EditLockPage.dart';
 
 class LockPage extends StatefulWidget {
   const LockPage({Key? key}) : super(key: key);
@@ -77,13 +79,12 @@ class _LockPageState extends State<LockPage> {
                           return DropdownMenuItem<String>(
                               value: value,
                               child: Container(
-                                  width: largeurEcran * 0.25, // Utilisez largeurEcran pour définir la largeur du Container
+                                  width: largeurEcran *
+                                      0.25, // Utilisez largeurEcran pour définir la largeur du Container
                                   child: Text(
                                     value,
                                     style: TextStyle(fontSize: 20.0),
-                                  )
-                              )
-                          );
+                                  )));
                         }).toList(),
                         onChanged: (String? newValue) {
                           setState(() {
@@ -99,7 +100,8 @@ class _LockPageState extends State<LockPage> {
                   height: hauteurEcran * 0.4,
                   child: Center(
                     child: CircularPercentIndicator(
-                      radius: min(largeurEcran, hauteurEcran) * 0.65, // Utilisez min(largeurEcran, hauteurEcran) pour définir le rayon du CircularPercentIndicator
+                      radius: min(largeurEcran, hauteurEcran) *
+                          0.65, // Utilisez min(largeurEcran, hauteurEcran) pour définir le rayon du CircularPercentIndicator
                       lineWidth: 25,
                       percent: _percent,
                       progressColor: Colors.deepPurple,
@@ -110,6 +112,69 @@ class _LockPageState extends State<LockPage> {
                   ),
                 ),
               ],
+            ),
+          ),
+          floatingActionButton: Align(
+            alignment: Alignment.bottomCenter,
+            child: Padding(
+              padding: EdgeInsets.only(
+                  bottom: 20.0,
+                  left: largeurEcran * 0.1), // Ajoutez un espace en bas pour éviter que les boutons ne soient trop près du bord de l'écran
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: <Widget>[
+                  Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      Text(
+                        'Add Lock',
+                        style: TextStyle(fontSize: 20.0),
+                      ),
+                      SizedBox(
+                          height:
+                              10.0), // Espacement entre le texte et le bouton
+                      FloatingActionButton(
+                        onPressed: () {
+                          // Naviguer vers la page d'ajout de cadenas
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => AddLockPage()),
+                          );
+                        },
+                        child: Icon(Icons.add, size: 30.0), // Icône plus grande
+                        backgroundColor: Colors.green,
+                      ),
+                    ],
+                  ),
+                  Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      Text(
+                        'Modify Lock',
+                        style: TextStyle(fontSize: 20.0),
+                      ),
+                      SizedBox(
+                          height:
+                              10.0), // Espacement entre le texte et le bouton
+                      FloatingActionButton(
+                        onPressed: () {
+                          // Naviguer vers la page de modification de cadenas
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    EditLockPage(lock: _selectedLock)),
+                          );
+                        },
+                        child:
+                            Icon(Icons.edit, size: 30.0), // Icône plus grande
+                        backgroundColor: Colors.blue,
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
         );
