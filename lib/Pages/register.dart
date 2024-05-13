@@ -20,7 +20,7 @@ class RegisterPage extends StatelessWidget {
     final String password = passwordController.text;
 
     final response = await http.post(
-      Uri.parse('http://putlock.umons.ac.be:8000/add_user'),
+      Uri.parse('http://10.107.10.64:8000/add_user'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
