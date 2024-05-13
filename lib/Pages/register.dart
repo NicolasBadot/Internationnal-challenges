@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+
 import 'package:internationnalchallenges/Components/my_button.dart';
 import 'package:internationnalchallenges/Components/my_textfield.dart';
 
@@ -11,7 +14,34 @@ class RegisterPage extends StatelessWidget {
   final passwordController = TextEditingController();
 
   //register user in
-  void registerUser() {}
+  Future<void> registerUser() async {
+    final String email = emailController.text;
+    final String username = usernameController.text;
+    final String password = passwordController.text;
+
+    final response = await http.post(
+      Uri.parse('http://putlock.umons.ac.be:8000/add_user'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(<String, String>{
+        'username': username,
+        'email': email,
+        'password': password, // Sending the password to the backend
+      }),
+    );
+
+    if (response.statusCode == 201) {
+      print('User registered successfully');
+      // Clear text fields after successful registration
+      emailController.clear();
+      usernameController.clear();
+      passwordController.clear();
+      // Navigate to another page or show success message
+    } else {
+      throw Exception('Failed to register user');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -73,9 +103,6 @@ class RegisterPage extends StatelessWidget {
                 onTap: registerUser,
                 buttonText: "Sign in",
               ),
-
-        
-
             ],
           ),
         )));
