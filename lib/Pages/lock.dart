@@ -16,8 +16,8 @@ class _LockPageState extends State<LockPage> {
   late Timer _timer;
   String _code = '';
   double _percent = 1;
-  String _selectedLock = 'Cadenas 1';
-  List<String> _lockOptions = ['Cadenas 1', 'Cadenas 2', 'Cadenas 3'];
+  String _selectedLock = 'Lock 1';
+  List<String> _lockOptions = ['Lock 1', 'Lock 2', 'Lock 3'];
 
   @override
   void initState() {
@@ -68,7 +68,7 @@ class _LockPageState extends State<LockPage> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
-                      Text('Bienvenue Nom_Utilisateur',
+                      Text('Welcome Username',
                           style: TextStyle(
                               fontSize: 24, fontWeight: FontWeight.bold)),
                       SizedBox(height: 40.0),
@@ -83,7 +83,8 @@ class _LockPageState extends State<LockPage> {
                                       0.25, // Utilisez largeurEcran pour définir la largeur du Container
                                   child: Text(
                                     value,
-                                    style: TextStyle(fontSize: 20.0),
+                                    style: TextStyle(fontSize: 20.0,),
+                                    textAlign: TextAlign.center,
                                   )));
                         }).toList(),
                         onChanged: (String? newValue) {
@@ -119,7 +120,8 @@ class _LockPageState extends State<LockPage> {
             child: Padding(
               padding: EdgeInsets.only(
                   bottom: 20.0,
-                  left: largeurEcran * 0.1), // Ajoutez un espace en bas pour éviter que les boutons ne soient trop près du bord de l'écran
+                  left: largeurEcran *
+                      0.1), // Ajoutez un espace en bas pour éviter que les boutons ne soient trop près du bord de l'écran
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: <Widget>[
@@ -127,8 +129,9 @@ class _LockPageState extends State<LockPage> {
                     mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
                       Text(
-                        'Add Lock',
+                        'Add \n Lock',
                         style: TextStyle(fontSize: 20.0),
+                        textAlign: TextAlign.center,
                       ),
                       SizedBox(
                           height:
@@ -151,8 +154,9 @@ class _LockPageState extends State<LockPage> {
                     mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
                       Text(
-                        'Modify Lock',
+                        'Modify \n Lock',
                         style: TextStyle(fontSize: 20.0),
+                        textAlign: TextAlign.center,
                       ),
                       SizedBox(
                           height:
@@ -170,6 +174,59 @@ class _LockPageState extends State<LockPage> {
                         child:
                             Icon(Icons.edit, size: 30.0), // Icône plus grande
                         backgroundColor: Colors.blue,
+                      ),
+                    ],
+                  ),
+                  Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      Text(
+                        'Delete \n Lock',
+                        style: TextStyle(fontSize: 20.0),
+                        textAlign: TextAlign.center,
+                      ),
+                      SizedBox(
+                          height:
+                              10.0), // Espacement entre le texte et le bouton
+                      FloatingActionButton(
+                        onPressed: () {
+                          // Afficher une boîte de dialogue pour confirmer la suppression
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                title: Text('Delete the lock'),
+                                content: Text(
+                                    'Are you sure that you want to delete $_selectedLock ?'),
+                                actions: <Widget>[
+                                  TextButton(
+                                    child: Text('Cancel'),
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                  ),
+                                  TextButton(
+                                    child: Text('Delete'),
+                                    onPressed: () {
+                                      setState(() {
+                                        _lockOptions.remove(_selectedLock);
+                                        if (_lockOptions.isNotEmpty) {
+                                          _selectedLock = _lockOptions.first;
+                                        } else {
+                                          _selectedLock = '';
+                                        }
+                                      });
+                                      Navigator.of(context).pop();
+                                    },
+                                  ),
+                                ],
+                              );
+                            },
+                          );
+                        },
+                        child:
+                            Icon(Icons.delete, size: 30.0), // Icône plus grande
+                        backgroundColor: Colors.red,
                       ),
                     ],
                   ),
