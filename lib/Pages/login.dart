@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+
 import 'package:internationnalchallenges/Components/my_button.dart';
 import 'package:internationnalchallenges/Components/my_textfield.dart';
+import 'package:internationnalchallenges/Pages/lock.dart';
 
 class LoginPage extends StatelessWidget {
   LoginPage({super.key});
@@ -10,10 +14,34 @@ class LoginPage extends StatelessWidget {
   final passwordController = TextEditingController();
 
   //Sign user in
-  void signUser() {}
+  Future<void> signUser(BuildContext context) async {
+    final String username = usernameController.text;
+    final String password = passwordController.text;
 
-  //send to the register page
-  void registerPage() {}
+    final response = await http.post(
+      Uri.parse('http://10.107.10.64:8000/login'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(<String, String>{
+        'username': username,
+        'password': password,
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      print('Login successful');
+      // Navigate to another page or show success message
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => LockPage()),
+      );
+    } else {
+      print('Login failed');
+      // Show error message or handle failed login
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -63,7 +91,7 @@ class LoginPage extends StatelessWidget {
               const SizedBox(height: 35),
 
               MyButton(
-                onTap: signUser,
+                onTap: () => signUser(context),
                 buttonText: "Sign in",
               ),
 
@@ -94,13 +122,6 @@ class LoginPage extends StatelessWidget {
                     ),
                   ],
                 )
-              ),
-
-              const SizedBox(height: 40),
-
-              MyButton(
-                onTap: registerPage,
-                buttonText: "Register",
               ),
 
             ],

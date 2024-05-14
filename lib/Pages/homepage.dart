@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
-import 'package:internationnalchallenges/Pages/lock.dart';
 import 'package:internationnalchallenges/Pages/login.dart';
 import 'package:internationnalchallenges/Pages/register.dart';
 
@@ -21,50 +20,51 @@ class _HomePageState extends State<HomePage> {
   static List<Widget> _widgetOptions = <Widget>[
     RegisterPage(),
     LoginPage(),
-    LockPage(),
   ];
 
 
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
-        child: _widgetOptions.elementAt(_selectedIndex),
-      ),
-      bottomNavigationBar: Container(
-        color: Colors.black,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 20),
-          child: GNav(
-            backgroundColor: Colors.black,
-            color: Colors.white,
-            activeColor: Colors.grey[300],
-            tabBackgroundColor: Colors.grey.shade800,
-            gap: 8,
-            onTabChange: (index) {
-              setState(() {
-                _selectedIndex = index;
-              });
-            },
-            padding: const EdgeInsets.all(16),
-            tabs: const [
-              GButton(
-                icon: Icons.home,
-                text: 'Home',
-              ),
-              GButton(
-                icon: Icons.lock,
-                text: 'Locks',
-              ),
-              GButton(
-                icon: Icons.add,
-                text: 'New',
-              )
-            ],
+    return LayoutBuilder(
+      builder: (BuildContext context, BoxConstraints constraints) {
+        var largeurEcran = constraints.maxWidth;
+        var hauteurEcran = constraints.maxHeight;
+        return Scaffold(
+          body: Center(
+            child: _widgetOptions.elementAt(_selectedIndex),
           ),
-        ),
-      ),
+          bottomNavigationBar: Container(
+            color: Colors.black,
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: largeurEcran * 0.15, vertical: hauteurEcran * 0.03),
+              child: GNav(
+                backgroundColor: Colors.black,
+                color: Colors.white,
+                activeColor: Colors.grey[300],
+                tabBackgroundColor: Colors.grey.shade800,
+                gap: 8,
+                onTabChange: (index) {
+                  setState(() {
+                    _selectedIndex = index;
+                  });
+                },
+                padding: const EdgeInsets.all(16),
+                tabs: const [
+                  GButton(
+                    icon: Icons.home,
+                    text: 'Register',
+                  ),
+                  GButton(
+                    icon: Icons.lock,
+                    text: 'Login',
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      }
     );
   }
 }
