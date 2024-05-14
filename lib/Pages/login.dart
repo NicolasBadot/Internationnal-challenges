@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 import 'package:internationnalchallenges/Components/my_button.dart';
 import 'package:internationnalchallenges/Components/my_textfield.dart';
@@ -31,6 +32,14 @@ class LoginPage extends StatelessWidget {
 
     if (response.statusCode == 200) {
       print('Login successful');
+      Map<String, dynamic> data = jsonDecode(response.body);
+      String primaryKey = data['primaryKey'];
+
+
+      final storage =  FlutterSecureStorage();
+
+      await storage.write(key: 'primaryKey', value: primaryKey);
+
       // Navigate to another page or show success message
       Navigator.push(
         context,

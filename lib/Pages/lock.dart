@@ -1,7 +1,12 @@
 import 'dart:async';
+import 'dart:io';
 import 'dart:math';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/percent_indicator.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+
 import 'package:internationnalchallenges/Pages/AddLockPage.dart';
 import 'package:internationnalchallenges/Pages/EditLockPage.dart';
 
@@ -17,7 +22,8 @@ class _LockPageState extends State<LockPage> {
   String _code = '';
   double _percent = 1;
   String _selectedLock = 'Lock 1';
-  List<String> _lockOptions = ['Lock 1', 'Lock 2', 'Lock 3'];
+  List<String> _lockOptions = [];
+  String primaryKey = '';
 
   @override
   void initState() {
@@ -25,6 +31,41 @@ class _LockPageState extends State<LockPage> {
     _generateCode(); // Générer un code dès le lancement de la page
     _timer = Timer.periodic(
         const Duration(milliseconds: 10), (Timer t) => _updatePercent());
+    _loadPrimaryKey();
+    sleep(const Duration(milliseconds: 500));
+    _loadLocks();
+  }
+
+  Future<void> _loadLocks() async {
+    final response = await http.post(
+      Uri.parse('http://10.107.10.64:8000/get_locks'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(<String, String>{
+        'user_id': '4',
+      }),
+    );
+    if (response.statusCode == 200) {
+      List<dynamic> locks = jsonDecode(response.body);
+      print(locks);
+      setState(() {
+        _lockOptions = locks.map<String>((lock) => lock[1]).toList();
+        if (_lockOptions.isNotEmpty) {
+          _selectedLock = _lockOptions[0];
+        }
+      });
+    } else {
+      print('Failed to load locks');
+    }
+  }
+
+  Future<void> _loadPrimaryKey() async {
+    final storage = FlutterSecureStorage();
+    String? key = await storage.read(key: 'primaryKey');
+    setState(() {
+      primaryKey = key ?? '';
+    });
   }
 
   @override
@@ -68,7 +109,7 @@ class _LockPageState extends State<LockPage> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
-                      Text('Welcome Username',
+                      Text('Welcome Username $primaryKey',
                           style: TextStyle(
                               fontSize: 24, fontWeight: FontWeight.bold)),
                       SizedBox(height: 40.0),
@@ -80,7 +121,7 @@ class _LockPageState extends State<LockPage> {
                               value: value,
                               child: Container(
                                   width: largeurEcran *
-                                      0.25, // Utilisez largeurEcran pour définir la largeur du Container
+                                      0.5, // Utilisez largeurEcran pour définir la largeur du Container
                                   child: Text(
                                     value,
                                     style: TextStyle(fontSize: 20.0,),
