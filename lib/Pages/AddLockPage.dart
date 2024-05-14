@@ -1,16 +1,35 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
-class AddLockPage extends StatelessWidget {
+class AddLockPage extends StatefulWidget {
+  @override
+  _AddLockPageState createState() => _AddLockPageState();
+}
+
+class _AddLockPageState extends State<AddLockPage> {
   final _formKey = GlobalKey<FormState>();
   final _nameController = TextEditingController();
   final _idController = TextEditingController();
   final _signatureController = TextEditingController();
+  String primaryKey = '';
 
+  @override
+  void initState() {
+    super.initState();
+    _loadPrimaryKey();
+  }
+
+  Future<void> _loadPrimaryKey() async {
+    final storage = FlutterSecureStorage();
+    String? key = await storage.read(key: 'primaryKey');
+    setState(() {
+      primaryKey = key ?? '';
+    });
+  }
 
   Future<void> addLock() async {
-    const userid = '1';
     final String name = _nameController.text;
     final String id = _idController.text;
     final String signature = _signatureController.text;
@@ -21,22 +40,22 @@ class AddLockPage extends StatelessWidget {
         'Content-Type': 'application/json; charset=UTF-8',
       },
       body: jsonEncode(<String, String>{
-        'user_id' : userid,
+        'user_id' : primaryKey,
         'name': name,
         'id': id,
-        'signature': signature, // Sending the password to the backend
+        'signature': signature,
       }),
     );
 
     if (response.statusCode == 201) {
-      print('User registered successfully');
+      print('Lock added successfully');
       // Clear text fields after successful registration
       _nameController.clear();
       _idController.clear();
       _signatureController.clear();
       // Navigate to another page or show success message
     } else {
-      throw Exception('Failed to register user');
+      throw Exception('Failed to add lock');
     }
   }
 
@@ -44,7 +63,7 @@ class AddLockPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Ajouter un cadenas'),
+        title: Text('Add a Lock'),
       ),
       body: Form(
         key: _formKey,
@@ -57,7 +76,7 @@ class AddLockPage extends StatelessWidget {
                 decoration: InputDecoration(labelText: 'Name'),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'Veuillez entrer un nom';
+                    return 'Please enter a name';
                   }
                   return null;
                 },
@@ -67,7 +86,7 @@ class AddLockPage extends StatelessWidget {
                 decoration: InputDecoration(labelText: 'ID'),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'Veuillez entrer un ID';
+                    return 'Please enter an id';
                   }
                   return null;
                 },
@@ -77,7 +96,7 @@ class AddLockPage extends StatelessWidget {
                 decoration: InputDecoration(labelText: 'Signature'),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'Veuillez entrer une marque';
+                    return 'Please enter a signature';
                   }
                   return null;
                 },

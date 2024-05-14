@@ -31,8 +31,11 @@ class _LockPageState extends State<LockPage> {
     _generateCode(); // Générer un code dès le lancement de la page
     _timer = Timer.periodic(
         const Duration(milliseconds: 10), (Timer t) => _updatePercent());
-    _loadPrimaryKey();
-    sleep(const Duration(milliseconds: 500));
+    _initializeData();
+  }
+
+  Future<void> _initializeData() async {
+    await _loadPrimaryKey();
     _loadLocks();
   }
 
@@ -43,7 +46,7 @@ class _LockPageState extends State<LockPage> {
         'Content-Type': 'application/json; charset=UTF-8',
       },
       body: jsonEncode(<String, String>{
-        'user_id': '4',
+        'user_id': primaryKey,
       }),
     );
     if (response.statusCode == 200) {
@@ -184,7 +187,10 @@ class _LockPageState extends State<LockPage> {
                             context,
                             MaterialPageRoute(
                                 builder: (context) => AddLockPage()),
-                          );
+                          ).then((_) {
+                            // Recharger les cadenas lorsque vous revenez de la page AddLockPage
+                            _loadLocks();
+                          });
                         },
                         child: Icon(Icons.add, size: 30.0), // Icône plus grande
                         backgroundColor: Colors.green,
