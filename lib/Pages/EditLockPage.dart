@@ -5,7 +5,7 @@ class EditLockPage extends StatelessWidget {
   final _formKey = GlobalKey<FormState>();
   final _nameController = TextEditingController();
   final _idController = TextEditingController();
-  final _brandController = TextEditingController();
+  final _signatureController = TextEditingController();
 
   EditLockPage({required this.lock});
 
@@ -42,7 +42,7 @@ class EditLockPage extends StatelessWidget {
                 },
               ),
               TextFormField(
-                controller: _brandController,
+                controller: _signatureController,
                 decoration: InputDecoration(labelText: 'Marque'),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
