@@ -71,6 +71,27 @@ class _LockPageState extends State<LockPage> {
     });
   }
 
+  Future<void> deleteLock() async {
+    print(_selectedLock);
+    final response = await http.delete(
+      Uri.parse('http://10.107.10.64:8000/delete_lock'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(<String, String>{
+        'user_id' : primaryKey,
+        'lock_name': _selectedLock,
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      print('Lock deleted successfully');
+      _loadLocks();
+    } else {
+      throw Exception('Failed to delete lock');
+    }
+  }
+
   @override
   void dispose() {
     _timer.cancel();
@@ -134,6 +155,7 @@ class _LockPageState extends State<LockPage> {
                         onChanged: (String? newValue) {
                           setState(() {
                             _selectedLock = newValue!;
+                            print(_selectedLock);
                             _generateCode();
                           });
                         },
@@ -255,6 +277,7 @@ class _LockPageState extends State<LockPage> {
                                   TextButton(
                                     child: Text('Delete'),
                                     onPressed: () {
+                                      deleteLock();
                                       setState(() {
                                         _lockOptions.remove(_selectedLock);
                                         if (_lockOptions.isNotEmpty) {
