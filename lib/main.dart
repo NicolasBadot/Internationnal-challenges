@@ -1,7 +1,4 @@
 import 'package:flutter/material.dart';
-import 'pages/login.dart';
-import 'pages/lock.dart';
-import 'pages/register.dart';
 import 'pages/homepage.dart';
 
 void main() {

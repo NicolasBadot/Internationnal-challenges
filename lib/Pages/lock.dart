@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:io';
 import 'dart:math';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -28,10 +27,15 @@ class _LockPageState extends State<LockPage> {
   @override
   void initState() {
     super.initState();
-    _generateCode(); // Générer un code dès le lancement de la page
+    _initializeCode(); // Générer un code dès le lancement de la page
     _timer = Timer.periodic(
         const Duration(milliseconds: 10), (Timer t) => _updatePercent());
     _initializeData();
+  }
+
+  Future<void> _initializeCode() async {
+    await _generateCode();
+    sendCode();
   }
 
   Future<void> _initializeData() async {
@@ -92,13 +96,32 @@ class _LockPageState extends State<LockPage> {
     }
   }
 
+  Future<void> sendCode() async {
+    final response = await http.post(
+      Uri.parse('http://10.107.10.64:8000/set_secret'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(<String, String>{
+        'code' : _code,
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      print('Code was sent succesfully');
+      _loadLocks();
+    } else {
+      throw Exception('Failed to send code');
+    }
+  }
+
   @override
   void dispose() {
     _timer.cancel();
     super.dispose();
   }
 
-  void _generateCode() {
+  Future<void> _generateCode() async{
     final random = Random();
     setState(() {
       _code = '${random.nextInt(10000).toString().padLeft(4, '0')}';
@@ -110,7 +133,7 @@ class _LockPageState extends State<LockPage> {
     setState(() {
       _percent += 0.00033333; // Augmenter le pourcentage de 1/30 chaque seconde
       if (_percent >= 1) {
-        _generateCode(); // Générer un nouveau code lorsque le pourcentage atteint 100%
+        _initializeCode(); // Générer un nouveau code lorsque le pourcentage atteint 100%
       }
     });
   }
@@ -155,8 +178,7 @@ class _LockPageState extends State<LockPage> {
                         onChanged: (String? newValue) {
                           setState(() {
                             _selectedLock = newValue!;
-                            print(_selectedLock);
-                            _generateCode();
+                            _initializeCode();
                           });
                         },
                       ),
