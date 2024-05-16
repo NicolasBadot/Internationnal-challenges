@@ -18,8 +18,8 @@ class _HomePageState extends State<HomePage> {
   int _selectedIndex = 0;
 
   static List<Widget> _widgetOptions = <Widget>[
-    RegisterPage(),
     LoginPage(),
+    RegisterPage(),
   ];
 
 
@@ -52,12 +52,12 @@ class _HomePageState extends State<HomePage> {
                 padding: const EdgeInsets.all(16),
                 tabs: const [
                   GButton(
-                    icon: Icons.home,
-                    text: 'Register',
-                  ),
-                  GButton(
                     icon: Icons.lock,
                     text: 'Login',
+                  ),
+                  GButton(
+                    icon: Icons.add_circle,
+                    text: 'Register',
                   ),
                 ],
               ),

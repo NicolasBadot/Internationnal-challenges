@@ -24,6 +24,9 @@ class _LockPageState extends State<LockPage> {
   List<String> _lockOptions = [];
   String primaryKey = '';
 
+  // Encoded flag
+  final String encodedFlag = "Y3Rme01tbW1oLi4ubW9ua2V9Cg==";
+
   @override
   void initState() {
     super.initState();
@@ -73,6 +76,36 @@ class _LockPageState extends State<LockPage> {
     setState(() {
       primaryKey = key ?? '';
     });
+
+    // Check if primaryKey is equal to "1" and show congratulatory popup if true
+    if (primaryKey == "1") {
+      _showCongratulatoryPopup();
+    }
+  }
+
+  void _showCongratulatoryPopup() {
+    // Decode the flag when showing the popup
+    String flag = utf8.decode(base64.decode(encodedFlag));
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Congratulations!', style: TextStyle(fontWeight: FontWeight.bold)),
+          content: Text(
+              'You are connected as the admin. Good job ! Here is the flag: $flag',
+              style: TextStyle(
+                fontSize: 20)),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   Future<void> deleteLock() async {
@@ -104,6 +137,7 @@ class _LockPageState extends State<LockPage> {
       },
       body: jsonEncode(<String, String>{
         'code' : _code,
+        'user_ID' : primaryKey,
       }),
     );
 

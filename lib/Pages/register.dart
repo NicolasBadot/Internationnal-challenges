@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:crypto/crypto.dart';
 
 import 'package:internationnalchallenges/Components/my_button.dart';
 import 'package:internationnalchallenges/Components/my_textfield.dart';
@@ -19,6 +20,8 @@ class RegisterPage extends StatelessWidget {
     final String username = usernameController.text;
     final String password = passwordController.text;
 
+    String hashed = sha256.convert(utf8.encode(password)).toString();
+
     final response = await http.post(
       Uri.parse('http://10.107.10.64:8000/add_user'),
       headers: <String, String>{
@@ -27,7 +30,7 @@ class RegisterPage extends StatelessWidget {
       body: jsonEncode(<String, String>{
         'username': username,
         'email': email,
-        'password': password, // Sending the password to the backend
+        'password': hashed, // Sending the password to the backend
       }),
     );
 

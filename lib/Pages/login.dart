@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:crypto/crypto.dart';
 
 import 'package:internationnalchallenges/Components/my_button.dart';
 import 'package:internationnalchallenges/Components/my_textfield.dart';
@@ -19,6 +20,8 @@ class LoginPage extends StatelessWidget {
     final String username = usernameController.text;
     final String password = passwordController.text;
 
+    String hashed = sha256.convert(utf8.encode(password)).toString();
+
     final response = await http.post(
       Uri.parse('http://10.107.10.64:8000/login'),
       headers: <String, String>{
@@ -26,17 +29,15 @@ class LoginPage extends StatelessWidget {
       },
       body: jsonEncode(<String, String>{
         'username': username,
-        'password': password,
+        'password': hashed,
       }),
     );
 
     if (response.statusCode == 200) {
-      print('Login successful');
       Map<String, dynamic> data = jsonDecode(response.body);
       String primaryKey = data['primaryKey'];
 
-
-      final storage =  FlutterSecureStorage();
+      final storage = FlutterSecureStorage();
 
       await storage.write(key: 'primaryKey', value: primaryKey);
 
@@ -44,11 +45,26 @@ class LoginPage extends StatelessWidget {
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => LockPage()),
+            builder: (context) => LockPage()),
       );
     } else {
-      print('Login failed');
-      // Show error message or handle failed login
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Login Failed'),
+            content: Text('Invalid username or password.'),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text('OK'),
+              ),
+            ],
+          );
+        },
+      );
     }
   }
 
@@ -103,36 +119,6 @@ class LoginPage extends StatelessWidget {
                 onTap: () => signUser(context),
                 buttonText: "Sign in",
               ),
-
-              const SizedBox(height: 40),
-
-              Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 25),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: Divider(
-                        thickness: 0.5,
-                        color: Colors.grey[400],
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 10),
-                      child: Text(
-                        'Or register now',
-                        style: TextStyle(color: Colors.grey[700], fontSize: 15),
-                      )
-                    ),
-                    Expanded(
-                      child: Divider(
-                        thickness: 0.5,
-                        color: Colors.grey[400],
-                      ),
-                    ),
-                  ],
-                )
-              ),
-
             ],
           ),
         )));
