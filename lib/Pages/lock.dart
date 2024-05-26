@@ -294,7 +294,9 @@ class _LockPageState extends State<LockPage> {
                             MaterialPageRoute(
                                 builder: (context) =>
                                     EditLockPage(lock: _selectedLock)),
-                          );
+                          ).then((_){
+                            _loadLocks();
+                          });
                         },
                         child:
                             Icon(Icons.edit, size: 30.0), // Icône plus grande
