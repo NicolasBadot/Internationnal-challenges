@@ -1,3 +1,4 @@
+import 'package:crypto/crypto.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -34,6 +35,8 @@ class _AddLockPageState extends State<AddLockPage> {
     final String id = _idController.text;
     final String signature = _signatureController.text;
 
+    String hashed = sha256.convert(utf8.encode(signature)).toString();
+
     final response = await http.post(
       Uri.parse('http://10.107.10.64:8000/add_lock'),
       headers: <String, String>{
@@ -43,7 +46,7 @@ class _AddLockPageState extends State<AddLockPage> {
         'user_id' : primaryKey,
         'name': name,
         'id': id,
-        'signature': signature,
+        'signature': hashed,
       }),
     );
 
@@ -53,7 +56,7 @@ class _AddLockPageState extends State<AddLockPage> {
       _nameController.clear();
       _idController.clear();
       _signatureController.clear();
-      // Navigate to another page or show success message
+      Navigator.pop(context);
     } else {
       throw Exception('Failed to add lock');
     }

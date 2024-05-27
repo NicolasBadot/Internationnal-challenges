@@ -41,6 +41,8 @@ class LoginPage extends StatelessWidget {
 
       await storage.write(key: 'primaryKey', value: primaryKey);
 
+      await storage.write(key: 'username', value: username);
+
       // Navigate to another page or show success message
       Navigator.push(
         context,

@@ -23,6 +23,7 @@ class _LockPageState extends State<LockPage> {
   String _selectedLock = 'Lock 1';
   List<String> _lockOptions = [];
   String primaryKey = '';
+  String _username = '';
 
   // Encoded flag
   final String encodedFlag = "Y3Rme01tbW1oLi4ubW9ua2V9Cg==";
@@ -73,8 +74,10 @@ class _LockPageState extends State<LockPage> {
   Future<void> _loadPrimaryKey() async {
     final storage = FlutterSecureStorage();
     String? key = await storage.read(key: 'primaryKey');
+    String? username = await storage.read(key: 'username');
     setState(() {
       primaryKey = key ?? '';
+      _username = username ?? '';
     });
 
     // Check if primaryKey is equal to "1" and show congratulatory popup if true
@@ -190,7 +193,7 @@ class _LockPageState extends State<LockPage> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
-                      Text('Welcome Username $primaryKey',
+                      Text('Welcome $_username',
                           style: TextStyle(
                               fontSize: 24, fontWeight: FontWeight.bold)),
                       SizedBox(height: 40.0),
