@@ -38,7 +38,7 @@ class _AddLockPageState extends State<AddLockPage> {
     String hashed = sha256.convert(utf8.encode(signature)).toString();
 
     final response = await http.post(
-      Uri.parse('http://10.107.10.64:8000/add_lock'),
+      Uri.parse('https://putlock.umons.ac.be:8000/add_lock'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
@@ -58,8 +58,34 @@ class _AddLockPageState extends State<AddLockPage> {
       _signatureController.clear();
       Navigator.pop(context);
     } else {
-      throw Exception('Failed to add lock');
+      _showAddLockErrorPopup(context);
     }
+  }
+
+  void _showAddLockErrorPopup(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(
+            "Adding the lock failed",
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
+          content: Text(
+            "Couldn't add your lock: incorrect ID or signature",
+            style: TextStyle(fontSize: 20),
+          ),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
@@ -104,6 +130,9 @@ class _AddLockPageState extends State<AddLockPage> {
                   return null;
                 },
               ),
+
+              const SizedBox(height: 25),
+
               ElevatedButton(
                 onPressed: addLock,
                 child: Text('Add'),

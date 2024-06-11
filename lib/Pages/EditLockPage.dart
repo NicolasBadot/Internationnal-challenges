@@ -35,7 +35,7 @@ class _EditLockPageState extends State<EditLockPage> {
     final String name = _nameController.text;
 
     final response = await http.post(
-      Uri.parse('http://10.107.10.64:8000/edit_lock_name'),
+      Uri.parse('https://putlock.umons.ac.be:8000/edit_lock_name'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
@@ -78,6 +78,9 @@ class _EditLockPageState extends State<EditLockPage> {
                   return null;
                 },
               ),
+
+              const SizedBox(height: 25),
+
               ElevatedButton(
                 onPressed: () async {
                   if (_formKey.currentState!.validate()) {

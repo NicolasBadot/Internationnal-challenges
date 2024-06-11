@@ -49,7 +49,7 @@ class _LockPageState extends State<LockPage> {
 
   Future<void> _loadLocks() async {
     final response = await http.post(
-      Uri.parse('http://10.107.10.64:8000/get_locks'),
+      Uri.parse('https://putlock.umons.ac.be:8000/get_locks'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },

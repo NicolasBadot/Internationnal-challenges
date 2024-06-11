@@ -15,7 +15,7 @@ class RegisterPage extends StatelessWidget {
   final passwordController = TextEditingController();
 
   //register user in
-  Future<void> registerUser() async {
+  Future<void> registerUser(BuildContext context) async {
     final String email = emailController.text;
     final String username = usernameController.text;
     final String password = passwordController.text;
@@ -23,7 +23,7 @@ class RegisterPage extends StatelessWidget {
     String hashed = sha256.convert(utf8.encode(password)).toString();
 
     final response = await http.post(
-      Uri.parse('http://10.107.10.64:8000/add_user'),
+      Uri.parse('https://putlock.umons.ac.be:8000/add_user'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
@@ -35,7 +35,7 @@ class RegisterPage extends StatelessWidget {
     );
 
     if (response.statusCode == 201) {
-      print('User registered successfully');
+      _showRegisterSuccess(context);
       // Clear text fields after successful registration
       emailController.clear();
       usernameController.clear();
@@ -46,16 +46,42 @@ class RegisterPage extends StatelessWidget {
     }
   }
 
+  void _showRegisterSuccess(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(
+            'Register Successful',
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
+          content: Text(
+            "Your account has been successfully created.",
+            style: TextStyle(fontSize: 20),
+          ),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: Colors.grey[300],
+        resizeToAvoidBottomInset: true,
         body: SafeArea(
             child: Center(
+                child: SingleChildScrollView(
           child: Column(
             children: [
-              // To space things better
-              const SizedBox(height: 50),
 
               const Icon(
                 Icons.lock,
@@ -87,7 +113,7 @@ class RegisterPage extends StatelessWidget {
 
               MyTextField(
                 controller: usernameController,
-                hintText: 'username',
+                hintText: 'Username',
                 obscureText: false,
               ),
 
@@ -96,18 +122,18 @@ class RegisterPage extends StatelessWidget {
 
               MyTextField(
                 controller: passwordController,
-                hintText: 'password',
+                hintText: 'Password',
                 obscureText: true,
               ),
 
               const SizedBox(height: 35),
 
               MyButton(
-                onTap: registerUser,
+                onTap: () => registerUser(context),
                 buttonText: "Sign in",
               ),
             ],
           ),
-        )));
+        ))));
   }
 }
